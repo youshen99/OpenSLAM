@@ -48,7 +48,7 @@ int binocularTest{
     // YOUSHEN_SLAM::binocular binoc();
 
 };
-
+//入口函数
 int main()
 {
   Binocular binoc;
