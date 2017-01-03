@@ -1,5 +1,6 @@
 #include "Binocular.h"
-
+#include <string>
+#include <sstream>
 namespace YOUSHEN_SLAM
 {
 
@@ -23,6 +24,7 @@ void Binocular::start()
         double t = 0;
         //获取上一个时间搓
         double lasttime = 0;
+        int n=0;
         while (1)
         {
             if (!m_makerbinocular.get_frame(left_image, right_image, acc, gyro, image_interval, imu_interval))
@@ -30,6 +32,10 @@ void Binocular::start()
 
             if (m_makerbinocular.new_frame_arrived())
             {
+                n++;
+                
+                if(n>11){
+                   
                 cv::imshow("left image", left_image); //左摄像头
                 cv::waitKey(1);
                 cv::imshow("right image", right_image); //右摄像头
@@ -59,13 +65,17 @@ void Binocular::start()
                 std::cout << "照片共 " << left_imagelist.size() << " 张" << std::endl;
                 for (size_t i = 0; i < left_imagelist.size(); i++)
                 {
-
+                    //进行补零操作
+                    std::stringstream ss;
+                    std::string str;
+                    ss<<i;
+                    ss>>str;
                     char buf[80];
-                    std::sprintf(buf, "/home/glodon/imageShuang/left_image/%d.jpg", (int)i);
+                    std::sprintf(buf,"/home/glodon/imageShuang/left_image/%0*d%d.png",6-str.length(),0,i);
                     cv::imwrite(buf, left_imagelist[i]);
 
                     char buf2[80];
-                    std::sprintf(buf2, "/home/glodon/imageShuang/right_image/%d.jpg", (int)i);
+                    std::sprintf(buf2, "/home/glodon/imageShuang/right_image/%0*d%d.png",6-str.length(),0,i);
                     cv::imwrite(buf2, right_imagelist[i]);
                 }
                 //存时间
@@ -75,7 +85,7 @@ void Binocular::start()
 
                 break;
             }
-        }
+        }}
     }
 }
 void Binocular::getLeftAndRight(cv::Mat &left_image, cv::Mat &right_image)
