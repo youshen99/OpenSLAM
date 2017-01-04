@@ -65,15 +65,34 @@ if(!fSettings.isOpened()){
     }
     DistCoef.copyTo(mDistCoef);
 }
-void computerMatchPoint(vector<DMathch>&dMatch1,vector<DMathch>&dMatch2,vector<DMathch>&dMatchLaster){
-     //计算输入的特征点的长度
-     if(){
 
-     }else{
-
-     }
+//前者的長度比後者要大
+       void computerMatch2(vector<DMatch>&dMatch12,vector<DMatch>&dMatch22,vector<DMatch>&dMatchLaster2){
+               for (size_t i = 0; i < dMatch12.size(); i++)
+               {
+                    for (size_t j = 0; j < dMatch22.size(); j++)
+               {//判断对应的前后只是否是一样的
+                   if(dMatch12[i].queryIdx==dMatch22[j].trainIdx){
+                     if(dMatch22[j].queryIdx==dMatch12[i].trainIdx){
+                         dMatchLaster2.push_back(dMatch12[i]);       
+                        }
+                      }
     
+                 }
+               }
+
+        }
+
+void computerMatchPoint(vector<DMatch>&dMatch1,vector<DMatch>&dMatch2,vector<DMatch>&dMatchLaster){
+     //计算输入的特征点的长度
+     if(dMatch1.size()<dMatch2.size()){
+       
+         computerMatch2(dMatch2,dMatch1,dMatchLaster);
+     }else{
+         computerMatch2(dMatch1,dMatch2,dMatchLaster);
+     }
 }
+
 void testHanshu()
 {
   Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
@@ -104,20 +123,20 @@ void testHanshu()
    vector<DMatch> matches2;
    matcher.match(desc2, desc1, matches2);
 
-
-
-
+vector<DMatch> dMatchAChoosel;
+computerMatchPoint(matches2,matches,dMatchAChoosel);
+  cout<<matches.size()<<"  "<<matches2.size()<<"    "<<dMatchAChoosel.size()<<endl;
   //初始化对应的函数
   CommonAccessMethod commonAN;
   vector<bool> vbMatchesInliersH;
   float scoreH;
   Mat H21;
-  commonAN.findHomography(keyPointList1,keyPointList2,matches,vbMatchesInliersH,scoreH,H21,200,1);
+  commonAN.findHomography(keyPointList1,keyPointList2,dMatchAChoosel,vbMatchesInliersH,scoreH,H21,200,1);
   vector<bool> vbMatchesInliersF;
   float scoreF;
   Mat F21;
-  commonAN.findFundamental(keyPointList1,keyPointList2,matches,vbMatchesInliersF,scoreF,F21,200,1);
-
+  commonAN.findFundamental(keyPointList1,keyPointList2,dMatchAChoosel,vbMatchesInliersF,scoreF,F21,200,1);
+  cout<<"H:  "<<scoreH<<"  F:  "<<scoreF<<endl;
 
   //将获取到的点进行画到图像中
   Mat outImage;
