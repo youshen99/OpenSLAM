@@ -38,7 +38,7 @@ Frame::Frame(Mat&image, Mat&K, Mat& distCoef) {
 	this->g_keyPointCount = this->g_imageKeyPoint.size();
 	//对特征点进行矫正处理
 	UndistortKeyPoints();
-//若是第一帧  进行初始画工作
+    //若是第一帧  进行初始画工作
 	//判断是否是第一帧  进行图像矫正
 	if (g_isInitFristFrame) {
 		//计算图像边界
@@ -172,7 +172,7 @@ void Frame::extraction_feature(Mat &image, vector<KeyPoint> &keyPoint,
 }
 //抽取图像的特征信息
 void Frame::extraction_DMatch(Mat &desc1, Mat &desc2, vector<DMatch>&match) {
-
+              
 }
 
 int Frame::getKeyPointCount() {

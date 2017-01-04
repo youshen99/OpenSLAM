@@ -32,6 +32,9 @@ public:
 	void Normalize(const vector<cv::KeyPoint> &vKeys, vector<cv::Point2f> &vNormalizedPoints, cv::Mat &T);
 	//使用迭代的方法计算最好的H矩阵
 // 参数：两幅图片匹配的特征点   最好的H矩阵的分数  H矩阵  mMaxIterations 最大迭代次数
+   void findHomography(vector<KeyPoint>&mvKeys1,vector<KeyPoint> &mvKeys2,vector<DMatch> &mvMatches12,vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,const int mMaxIterations,int mSigma);
+    void findFundamental(vector<KeyPoint>&mvKeys1,vector<KeyPoint> &mvKeys2,vector<DMatch> &mvMatches12,vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,const int mMaxIterations,int mSigma);
+
 	void findHomography(vector<KeyPoint>&mvKeys1,vector<KeyPoint> &mvKeys2,vector<Match> &mvMatches12,vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,const int mMaxIterations,int mSigma);
     void findFundamental(vector<KeyPoint>&mvKeys1,vector<KeyPoint> &mvKeys2,vector<Match> &mvMatches12,vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,const int mMaxIterations,int mSigma);
 	//获取一个集合  该集合是
