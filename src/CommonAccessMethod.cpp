@@ -198,18 +198,25 @@ void CommonAccessMethod::getRandomSet(const int N, const int mMaxIterations,
 	}
     }
 }
-void CommonAccessMethod::findFundamental(vector<KeyPoint> &mvKeys1,
-					 vector<KeyPoint> &mvKeys2, vector<Match> &mvMatches12,
-					 vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,
-					 const int mMaxIterations, int mSigma)
+// void CommonAccessMethod::findFundamental(vector<KeyPoint> &mvKeys1,
+// 					 vector<KeyPoint> &mvKeys2, vector<Match> &mvMatches12,
+// 					 vector<bool> &vbMatchesInliers, float &score, cv::Mat &H21,
+// 					 const int mMaxIterations, int mSigma)
+// {
+
+
+
+
+// }
+void CommonAccessMethod::vectorDmatchToMatch(vector<DMatch> &vecDMatch1, vector<Match> &vecMatch)
 {
-}
-void CommonAccessMethod::vectorDmatchToMatch(vector<DMatch> &vecDMatch, vector<Match> &vecMatch)
-{
-    for (size_t i = 0; i < vecDMatch.size(); i++)
+    for (size_t i = 0; i < vecDMatch1.size(); i++)
     {
-	vecMatch[i].first = vecDMatch[i].queryIdx;
-	vecMatch[i].second = vecDMatch[i].trainIdx;
+		Match match;
+	match.first = vecDMatch1[i].queryIdx;
+	match.second = vecDMatch1[i].trainIdx;
+    //cout<<vecDMatch1[i].queryIdx<<"   "<<vecDMatch1[i].trainIdx<<endl;
+	vecMatch.push_back(match);
     }
 }
 //其中 vbMatchesInliers socre H21 是带球的点  最大迭代次数  默认200 mSigma 为 1.0
@@ -223,7 +230,7 @@ void CommonAccessMethod::findFundamental(vector<KeyPoint> &mvKeys1, vector<KeyPo
 {
     vector<Match> match12;
     vectorDmatchToMatch(mvMatches12, match12);
-    findFundamental(mvKeys1, mvKeys2, match12, vbMatchesInliers, score, H21, mMaxIterations, mSigma);
+    findHomography(mvKeys1, mvKeys2, match12, vbMatchesInliers, score, H21, mMaxIterations, mSigma);
 }
 
 void CommonAccessMethod::findHomography(vector<KeyPoint> &mvKeys1,

@@ -65,6 +65,15 @@ if(!fSettings.isOpened()){
     }
     DistCoef.copyTo(mDistCoef);
 }
+void computerMatchPoint(vector<DMathch>&dMatch1,vector<DMathch>&dMatch2,vector<DMathch>&dMatchLaster){
+     //计算输入的特征点的长度
+     if(){
+
+     }else{
+
+     }
+    
+}
 void testHanshu()
 {
   Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
@@ -72,7 +81,7 @@ void testHanshu()
   Mat K;
   Mat disCof;
 
-  getSettingFile("",K,disCof);
+  getSettingFile("/home/glodon/MySLAM/ORB_SLAM2/Examples/Monocular/MYdATA.yaml",K,disCof);
 
 
   //第一张图片
@@ -81,7 +90,7 @@ void testHanshu()
   vector<KeyPoint> keyPointList1 = imageFrame->g_imageKeyPointUn;
   Mat desc1 = imageFrame->g_desc;
   //第二张图片
-  Mat image2 = imread("/home/glodon/imageShuang/left_image/000000.png");
+  Mat image2 = imread("/home/glodon/imageShuang/left_image/000002.png");
   Frame *imageFrame2 = new Frame(image2, K, disCof);
 
   vector<KeyPoint> keyPointList2 = imageFrame2->g_imageKeyPointUn;
@@ -91,14 +100,24 @@ void testHanshu()
   vector<DMatch> matches;
   matcher.match(desc1, desc2, matches);
   //DMatch和Match 转换
+  //计算一个反响投影  控制特征点的匹配参数 增加精确度
+   vector<DMatch> matches2;
+   matcher.match(desc2, desc1, matches2);
+
+
 
 
   //初始化对应的函数
   CommonAccessMethod commonAN;
-  vector<bool> vbMatchesInliers;
-  float score;
+  vector<bool> vbMatchesInliersH;
+  float scoreH;
   Mat H21;
-  commonAN.findHomography(keyPointList1,keyPointList2,matches,vbMatchesInliers,score,H21,200,1);
+  commonAN.findHomography(keyPointList1,keyPointList2,matches,vbMatchesInliersH,scoreH,H21,200,1);
+  vector<bool> vbMatchesInliersF;
+  float scoreF;
+  Mat F21;
+  commonAN.findFundamental(keyPointList1,keyPointList2,matches,vbMatchesInliersF,scoreF,F21,200,1);
+
 
   //将获取到的点进行画到图像中
   Mat outImage;
@@ -117,23 +136,26 @@ int binocularTest{
 //入口函数
 int main()
 {
-    Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
-    Mat gray;
-    isImageToGrat(image,gray);
-  // Binocular binoc;
-  // binoc.start();
-//使用特征点提取算法进行orb特征提取
 
-ORBextractor orb(500,1.2,8,20,7);
-Mat mask;
-vector<KeyPoint> keyPoint;
-Mat desc;
-orb(gray,mask,keyPoint,desc);
-Mat outputMat;
-drawKeypoints(image,keyPoint,outputMat,Scalar(255,0,0),DrawMatchesFlags::DEFAULT);
-imshow("dian",outputMat);
+testHanshu();
 
-cout<<keyPoint.size()<<endl;
-waitKey(0);
+//     Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
+//     Mat gray;
+//     isImageToGrat(image,gray);
+//   // Binocular binoc;
+//   // binoc.start();
+// //使用特征点提取算法进行orb特征提取
+
+// ORBextractor orb(500,1.2,8,20,7);
+// Mat mask;
+// vector<KeyPoint> keyPoint;
+// Mat desc;
+// orb(gray,mask,keyPoint,desc);
+// Mat outputMat;
+// drawKeypoints(image,keyPoint,outputMat,Scalar(255,0,0),DrawMatchesFlags::DEFAULT);
+// imshow("dian",outputMat);
+
+// cout<<keyPoint.size()<<endl;
+// waitKey(0);
   return 0;
 }
