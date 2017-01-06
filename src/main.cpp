@@ -2,7 +2,7 @@
  * @Author: youshen 
  * @Date: 2016-12-30 11:11:53 
  * @Last Modified by: youshen
- * @Last Modified time: 2017-01-05 18:52:25
+ * @Last Modified time: 2017-01-05 19:07:06
  */
 
 #include <iostream>
@@ -63,6 +63,11 @@ YOUSHEN_SLAM::ToolMethods::computerMatchPoint(matches2,matches,dMatchAChoosel);
   drawKeypoints(image, keyPointList1, outImage);
   imshow("KeyPoint", outImage);
   cout << disCof << endl;
+
+    Mat imageMatches;
+    drawMatches(image,keyPointList1,image2,keyPointList2,dMatchAChoosel,
+        imageMatches,Scalar(255,0,0));
+ imshow("KeyPoint2", imageMatches);
   waitKey(0);
   //YOUSHEN_SLAM::Frame myFrame(image,K,disCof);
   //Frame myFrame(image，K,disCof);
@@ -77,24 +82,8 @@ int main()
 {
 
 testHanshu();
-
-//     Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
-//     Mat gray;
-//     isImageToGrat(image,gray);
-//   // Binocular binoc;
-//   // binoc.start();
-// //使用特征点提取算法进行orb特征提取
-
-// ORBextractor orb(500,1.2,8,20,7);
-// Mat mask;
-// vector<KeyPoint> keyPoint;
-// Mat desc;
-// orb(gray,mask,keyPoint,desc);
-// Mat outputMat;
-// drawKeypoints(image,keyPoint,outputMat,Scalar(255,0,0),DrawMatchesFlags::DEFAULT);
-// imshow("dian",outputMat);
-
-// cout<<keyPoint.size()<<endl;
-// waitKey(0);
+//开启双目  获取数据
+ // Binocular binoc;
+//   binoc.start();
   return 0;
 }
