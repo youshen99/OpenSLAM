@@ -71,11 +71,11 @@ void Binocular::start()
                     ss<<i;
                     ss>>str;
                     char buf[80];
-                    std::sprintf(buf,"/home/glodon/imageShuang/left_image/%0*d%d.png",6-str.length(),0,i);
+                    std::sprintf(buf,"/home/glodon/imageShuang/left_image/%0*d%d.png",6-str.length(),0,(int)i);
                     cv::imwrite(buf, left_imagelist[i]);
 
                     char buf2[80];
-                    std::sprintf(buf2, "/home/glodon/imageShuang/right_image/%0*d%d.png",6-str.length(),0,i);
+                    std::sprintf(buf2, "/home/glodon/imageShuang/right_image/%0*d%d.png",6-str.length(),0,(int)i);
                     cv::imwrite(buf2, right_imagelist[i]);
                 }
                 //存时间
