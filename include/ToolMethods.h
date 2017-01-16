@@ -9,6 +9,10 @@
 #include<opencv2/opencv.hpp>
 #include<string>
 #include<vector>
+#include <Eigen/Core>
+// Eigen 几何模块
+#include <Eigen/Geometry>
+#include <vector>
 namespace YOUSHEN_SLAM
 {
    class ToolMethods{
@@ -21,6 +25,10 @@ namespace YOUSHEN_SLAM
         static  void computerMatch2(std::vector<cv::DMatch>&dMatch12,std::vector<cv::DMatch>&dMatch22,std::vector<cv::DMatch>&dMatchLaster2);
         //参数含义同上 前两个参数顺序可以无序
         static void  computerMatchPoint(std::vector<cv::DMatch>&dMatch1,std::vector<cv::DMatch>&dMatch2,std::vector<cv::DMatch>&dMatchLaster);
+        //通过旋转矩阵计算对应的俯仰角 输入opencv 矩阵  返回是对应的vectorZXY对应的值
+        static bool computerParallax(const cv::Mat &rotation_mat,std::vector<float> &angleZXY);
+        //角度的转换
+        static Eigen::Matrix3d Mat2Matrix3d(const cv::Mat& mat);
 };
 }
 

@@ -33,9 +33,7 @@ void Binocular::start()
             if (m_makerbinocular.new_frame_arrived())
             {
                 n++;
-                
                 if(n>11){
-                   
                 cv::imshow("left image", left_image); //左摄像头
                 cv::waitKey(1);
                 cv::imshow("right image", right_image); //右摄像头
@@ -55,7 +53,6 @@ void Binocular::start()
                     timestep.push_back((newtime - lasttime) / (cvGetTickFrequency() * 1000));
                 }
             }
-
             //  usleep(10000);
             char key = cv::waitKey(10);
             //    std::cout<<(int)key<<std::endl;
@@ -73,14 +70,12 @@ void Binocular::start()
                     char buf[80];
                     std::sprintf(buf,"/home/glodon/imageShuang/left_image/%0*d%d.png",6-str.length(),0,(int)i);
                     cv::imwrite(buf, left_imagelist[i]);
-
                     char buf2[80];
                     std::sprintf(buf2, "/home/glodon/imageShuang/right_image/%0*d%d.png",6-str.length(),0,(int)i);
                     cv::imwrite(buf2, right_imagelist[i]);
                 }
                 //存时间
                 fileTool.WriteFileByRowList(timestep, "/home/glodon/imageShuang/time.txt", std::ios::trunc);
-
                 std::cout << "----end------" << std::endl;
 
                 break;

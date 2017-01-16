@@ -17,7 +17,7 @@ using namespace cv;
 using namespace YOUSHEN_SLAM;
 void testHanshu()
 {
-  Mat image = imread("/home/glodon/imageShuang/left_image/000000.png");
+  Mat image = imread("/home/glodon/imageShuang/left_image/000002.png");
   //相机矩阵  獲取相機的参数和畸变函数
   Mat K;
   Mat disCof;
@@ -28,7 +28,7 @@ void testHanshu()
   vector<KeyPoint> keyPointList1 = imageFrame->g_imageKeyPointUn;
   Mat desc1 = imageFrame->g_desc;
   //第二张图片
-  Mat image2 = imread("/home/glodon/imageShuang/left_image/000002.png");
+  Mat image2 = imread("/home/glodon/imageShuang/left_image/000005.png");
   Frame *imageFrame2 = new Frame(image2, K, disCof);
 
   vector<KeyPoint> keyPointList2 = imageFrame2->g_imageKeyPointUn;
@@ -55,19 +55,36 @@ YOUSHEN_SLAM::ToolMethods::computerMatchPoint(matches2,matches,dMatchAChoosel);
   float scoreF;
   Mat F21;
   commonAN.findFundamental(keyPointList1,keyPointList2,dMatchAChoosel,vbMatchesInliersF,scoreF,F21,200,1);
+  
   cout<<"H:  "<<scoreH<<"  F:  "<<scoreF<<endl;
   float RH = scoreH/(scoreH+scoreF);
+  //假设矩阵为H矩阵  则进行图像的三维回复工作  
+  //ReconstructH( vector<cv::KeyPoint> &mvKeys1, vector<cv::KeyPoint> &mvKeys2,vector<DMatch> &mvMatches,float mSigma2,vector<bool> &vbMatchesInliers, cv::Mat &H21, cv::Mat &K,
+  //                   cv::Mat &R21, cv::Mat &t21, vector<cv::Point3f> &vP3D, vector<bool> &vbTriangulated, float minParallax, int minTriangulated){
+  cv::Mat R21;
+  cv::Mat t21;
+  vector<cv::Point3f> vP3D;
+  vector<bool> vbTriangulated;
+  commonAN.ReconstructH(keyPointList1,keyPointList2,dMatchAChoosel,1,vbMatchesInliersH,H21,K,R21,t21,vP3D,vbTriangulated,1.0,50);
+  //计算角度
+  vector<float> angleZXY;
+  YOUSHEN_SLAM::ToolMethods::computerParallax(R21,angleZXY);
+  cout<< "-------------"<<endl; 
+  for(int i=0;i<vP3D.size();i++){
+  cout<<vP3D[i].x<<"\t"<<vP3D[i].y<<"\t"<<vP3D[i].z<<endl;
+  } 
+ 
+
   cout<<RH<<endl;
   //将获取到的点进行画到图像中
   Mat outImage;
   drawKeypoints(image, keyPointList1, outImage);
   imshow("KeyPoint", outImage);
   cout << disCof << endl;
-
-    Mat imageMatches;
-    drawMatches(image,keyPointList1,image2,keyPointList2,dMatchAChoosel,
+  Mat imageMatches;
+  drawMatches(image,keyPointList1,image2,keyPointList2,dMatchAChoosel,
         imageMatches,Scalar(255,0,0));
- imshow("KeyPoint2", imageMatches);
+  imshow("KeyPoint2", imageMatches);
   waitKey(0);
   //YOUSHEN_SLAM::Frame myFrame(image,K,disCof);
   //Frame myFrame(image，K,disCof);
@@ -83,7 +100,7 @@ int main()
 
 testHanshu();
 //开启双目  获取数据
- // Binocular binoc;
-//   binoc.start();
+  // Binocular binoc;
+  // binoc.start();
   return 0;
 }

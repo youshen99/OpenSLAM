@@ -52,21 +52,19 @@ if(!fSettings.isOpened()){
 }
 
 //前者的長度比後者要大
-       void ToolMethods::computerMatch2(std::vector<cv::DMatch>&dMatch12,std::vector<cv::DMatch>&dMatch22,std::vector<cv::DMatch>&dMatchLaster2){
-               for (size_t i = 0; i < dMatch12.size(); i++)
-               {
-                    for (size_t j = 0; j < dMatch22.size(); j++)
-               {//判断对应的前后只是否是一样的
-                   if(dMatch12[i].queryIdx==dMatch22[j].trainIdx){
-                     if(dMatch22[j].queryIdx==dMatch12[i].trainIdx){
-                         dMatchLaster2.push_back(dMatch12[i]);       
-                        }
-                      }
-    
+void ToolMethods::computerMatch2(std::vector<cv::DMatch>&dMatch12,std::vector<cv::DMatch>&dMatch22,std::vector<cv::DMatch>&dMatchLaster2){
+     for (size_t i = 0; i < dMatch12.size(); i++)
+     {
+        for (size_t j = 0; j < dMatch22.size(); j++)
+       {//判断对应的前后只是否是一样的
+            if(dMatch12[i].queryIdx==dMatch22[j].trainIdx){
+              if(dMatch22[j].queryIdx==dMatch12[i].trainIdx){
+                dMatchLaster2.push_back(dMatch12[i]);       
                  }
                }
-
-        }
+         }
+     }
+   }
 
 void ToolMethods::computerMatchPoint(std::vector<cv::DMatch>&dMatch1,std::vector<cv::DMatch>&dMatch2,std::vector<cv::DMatch>&dMatchLaster){
      //计算输入的特征点的长度
@@ -78,6 +76,28 @@ void ToolMethods::computerMatchPoint(std::vector<cv::DMatch>&dMatch1,std::vector
      }
 }
 
-
+ bool ToolMethods::computerParallax(const cv::Mat &rotation_mat,std::vector<float> &angleZXY){
+     //判断是否是旋转矩阵 
+     if(rotation_mat.rows!=3||rotation_mat.cols!=3){
+        return false;
+     }
+     //Mat 转 matrix
+     Eigen::Matrix3d roat_matrix = ToolMethods::Mat2Matrix3d(rotation_mat);
+     //计算对应的旋转矩阵 
+      Eigen::Vector3d euler_angles = roat_matrix.eulerAngles ( 2,1,0 );
+      std::cout<<euler_angles<<std::endl;//******************80
+      angleZXY.push_back(euler_angles(0,0));
+      angleZXY.push_back(euler_angles(1,0));
+      angleZXY.push_back( euler_angles(2,0));
+ }
+ Eigen::Matrix3d ToolMethods::Mat2Matrix3d(const cv::Mat& mat){
+       Eigen::Matrix3d matrix;
+       for(int i=0;i<3;i++){
+          for(int j=0;j<3;j++){ 
+                matrix(i,j)=mat.at<float>(i,j);
+          }
+       }
+       return matrix;
+ }
 
 }
